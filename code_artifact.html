@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дасимба (@Dasimba) — Официальный хаб</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter & Unbounded -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent-primary: #a855f7;
+            --accent-secondary: #06b6d4;
+            --accent-glow: rgba(168, 85, 247, 0.45);
+            --accent-glow-soft: rgba(6, 182, 212, 0.22);
+            --bg-dark: #07070c;
+            --card-bg: rgba(18, 18, 30, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) #0f0f1a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .font-display {
+            font-family: 'Unbounded', sans-serif;
+        }
+
+        /* Background Canvas & Ambient Orbs */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.45;
+        }
+
+        .orb-1 {
+            width: 440px;
+            height: 440px;
+            background: var(--accent-primary);
+            top: -120px;
+            left: -100px;
+            animation: floatOrb1 16s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-secondary);
+            bottom: -100px;
+            right: -80px;
+            animation: floatOrb2 19s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(120px, 90px) scale(1.15); }
+        }
+
+        @keyframes floatOrb2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-110px, -80px) scale(1.2); }
+        }
+
+        /* Glassmorphism Panels */
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(22, 22, 37, 0.62);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: var(--accent-primary);
+            box-shadow: 0 14px 32px -8px var(--accent-glow), 0 0 20px -5px var(--accent-glow-soft);
+        }
+
+        /* Avatar Rotating Neon Ring */
+        .avatar-ring-wrapper {
+            position: relative;
+            padding: 5px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary));
+            background-size: 200% 200%;
+            animation: gradientSpin 4s linear infinite;
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        @keyframes gradientSpin {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Theme Gradient Text & Buttons */
+        .theme-gradient-text {
+            background: linear-gradient(135deg, #ffffff 10%, var(--accent-primary) 65%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-neon {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            box-shadow: 0 4px 18px var(--accent-glow);
+            transition: all 0.25s ease;
+        }
+
+        /* Status Pulse */
+        .status-dot {
+            position: relative;
+        }
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.6;
+            animation: pingSlow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes pingSlow {
+            75%, 100% {
+                transform: scale(2.1);
+                opacity: 0;
+            }
+        }
+
+        /* Hide default scrollbar for tabs */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+    </style>
+</head>
+<body class="selection:bg-purple-500 selection:text-white">
+
+    <!-- Animated Particle Grid Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Ambient Glow Orbs -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 max-w-3xl mx-auto px-4 pt-10 pb-16 sm:px-6 sm:pt-14">
+
+        <!-- 1. PROFILE HEADER CARD -->
+        <section class="glass-panel rounded-3xl p-6 sm:p-8 mb-6 text-center relative overflow-hidden">
+            <!-- Subtle decorative top banner glow -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-3/4 h-36 rounded-full blur-3xl pointer-events-none opacity-35" style="background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));"></div>
+
+            <!-- Static Cyber Lion Avatar -->
+            <div class="relative inline-block mb-4">
+                <div class="avatar-ring-wrapper">
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-slate-900 flex items-center justify-center relative">
+                        <img id="profile-avatar" src="" alt="Дасимба Аватар" class="w-full h-full object-cover select-none pointer-events-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Online Status Pill -->
+            <div class="flex justify-center mb-3">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-slate-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 status-dot"></span>
+                    <span>В сети</span>
+                </div>
+            </div>
+
+            <!-- Nickname & Verified Badge -->
+            <div class="flex items-center justify-center gap-2 mb-1">
+                <h1 class="font-display text-2xl sm:text-4xl font-extrabold tracking-tight theme-gradient-text">
+                    Дасимба
+                </h1>
+                <span title="Официальный профиль" class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs text-white shadow-md" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));">
+                    <i class="fa-solid fa-check"></i>
+                </span>
+            </div>
+
+            <!-- Handle with Click-to-Copy -->
+            <div class="mb-4">
+                <button onclick="copyText('@Dasimba', 'Скопировано: @Dasimba')" title="Нажми, чтобы скопировать ник" class="inline-flex items-center gap-1.5 text-sm font-mono text-slate-400 hover:text-white transition px-3 py-1 rounded-xl hover:bg-white/5 active:scale-95">
+                    <span>@Dasimba</span>
+                    <i class="fa-regular fa-copy text-xs opacity-75"></i>
+                </button>
+            </div>
+
+            <!-- Bio Description -->
+            <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                Гейминг • Стримы • Контент. Все мои официальные соцсети и игровые профили в одном месте.
+            </p>
+        </section>
+
+        <!-- 2. CONTROLS: CATEGORY TABS & VIEW TOGGLE -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 px-1">
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                <button onclick="setFilter('all')" id="filter-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-white/15 text-white border border-white/20 shrink-0">
+                    Все
+                </button>
+                <button onclick="setFilter('streams')" id="filter-streams" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium transition bg-white/5 text-slate-400 hover:text-white border border-transparent shrink-0">
+                    Стримы и Видео
+                </button>
+                <button onclick="setFilter('games')" id="filter-games" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium transition bg-white/5 text-slate-400 hover:text-white border border-transparent shrink-0">
+                    Игры
+                </button>
+                <button onclick="setFilter('social')" id="filter-social" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium transition bg-white/5 text-slate-400 hover:text-white border border-transparent shrink-0">
+                    Соцсети
+                </button>
+                <button onclick="setFilter('music')" id="filter-music" class="filter-btn px-4 py-2 rounded-xl text-xs font-medium transition bg-white/5 text-slate-400 hover:text-white border border-transparent shrink-0">
+                    Музыка
+                </button>
+            </div>
+
+            <!-- View Toggle: Grid / List -->
+            <div class="flex items-center gap-1 self-end sm:self-center bg-white/5 border border-white/10 p-1 rounded-xl">
+                <button onclick="setViewMode('grid')" id="view-grid-btn" title="Сетка" class="w-8 h-8 rounded-lg flex items-center justify-center text-xs transition bg-white/20 text-white shadow-sm">
+                    <i class="fa-solid fa-grip"></i>
+                </button>
+                <button onclick="setViewMode('list')" id="view-list-btn" title="Список" class="w-8 h-8 rounded-lg flex items-center justify-center text-xs transition text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. SOCIAL & GAMING LINKS CONTAINER -->
+        <section id="links-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 transition-all duration-300">
+            <!-- Populated via JavaScript -->
+        </section>
+
+        <!-- Clean Read-Only Footer -->
+        <footer class="mt-12 text-center text-xs text-slate-500 flex items-center justify-center gap-2 py-4">
+            <span class="w-2 h-2 rounded-full" style="background: var(--accent-primary)"></span>
+            <span>© Дасимба (@Dasimba)</span>
+        </footer>
+    </main>
+
+    <!-- ==========================================
+         TOAST NOTIFICATION
+         ========================================== -->
+    <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-4 max-w-[90vw]">
+        <div class="glass-panel px-4 py-3 rounded-2xl border border-white/20 shadow-2xl flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full btn-neon flex items-center justify-center text-white text-xs shrink-0">
+                <i class="fa-solid fa-check"></i>
+            </span>
+            <span id="toast-message" class="text-xs sm:text-sm font-medium text-white leading-tight">Скопировано!</span>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         APPLICATION SCRIPT
+         ========================================== -->
+    <script>
+        /* Static Cyber Neon Lion Avatar for DASIMBA */
+        const DASIMBA_AVATAR_SVG = `data:image/svg+xml;utf8,` + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+                <defs>
+                    <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#0f0722"/>
+                        <stop offset="100%" stop-color="#1e1b4b"/>
+                    </linearGradient>
+                    <linearGradient id="mane" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#a855f7"/>
+                        <stop offset="50%" stop-color="#ec4899"/>
+                        <stop offset="100%" stop-color="#06b6d4"/>
+                    </linearGradient>
+                </defs>
+                <rect width="240" height="240" fill="url(#bg1)"/>
+                <circle cx="120" cy="120" r="95" fill="none" stroke="url(#mane)" stroke-width="3" stroke-dasharray="10 6" opacity="0.5"/>
+                <polygon points="120,22 155,40 190,35 195,75 215,115 195,160 175,195 120,218 65,195 45,160 25,115 45,75 50,35 85,40" fill="url(#mane)" opacity="0.25"/>
+                <polygon points="120,34 152,50 180,75 186,120 168,168 120,198 72,168 54,120 60,75 88,50" fill="#131129" stroke="url(#mane)" stroke-width="4" stroke-linejoin="round"/>
+                <polygon points="62,68 48,36 86,50" fill="#1e1b4b" stroke="#a855f7" stroke-width="3"/>
+                <polygon points="178,68 192,36 154,50" fill="#1e1b4b" stroke="#06b6d4" stroke-width="3"/>
+                <polygon points="75,102 112,112 105,122 72,115" fill="#06b6d4"/>
+                <polygon points="165,102 128,112 135,122 168,115" fill="#06b6d4"/>
+                <polygon points="120,115 106,142 134,142" fill="#ec4899"/>
+                <path d="M120,142 L120,162 M100,168 Q120,155 140,168" stroke="#e2e8f0" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <polygon points="95,68 108,82 120,62 132,82 145,68" fill="none" stroke="#facc15" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <text x="120" y="212" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-weight="900" font-size="14" letter-spacing="3">DASIMBA</text>
+            </svg>
+        `);
+
+        /* Brand Icons */
+        const PLATFORM_ICONS = {
+            twitch: `<i class="fa-brands fa-twitch text-2xl"></i>`,
+            youtube: `<i class="fa-brands fa-youtube text-2xl"></i>`,
+            steam: `<i class="fa-brands fa-steam text-2xl"></i>`,
+            roblox: `
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                    <path d="M5.164 0L.16 18.928L18.836 24L23.84 5.072L5.164 0ZM14.02 14.37L9.63 13.21L10.79 8.82L15.18 9.98L14.02 14.37Z"/>
+                </svg>
+            `,
+            telegram: `<i class="fa-brands fa-telegram text-2xl"></i>`,
+            discord: `<i class="fa-brands fa-discord text-2xl"></i>`,
+            vk: `<i class="fa-brands fa-vk text-2xl"></i>`,
+            spotify: `<i class="fa-brands fa-spotify text-2xl"></i>`
+        };
+
+        /* Updated Links Data for Дасимба (@Dasimba) */
+        const LINKS_DATA = [
+            {
+                id: 'twitch',
+                platform: 'twitch',
+                title: 'Twitch',
+                subtitle: 'twitch.tv/dasimba_',
+                copyValue: 'https://www.twitch.tv/dasimba_',
+                url: 'https://www.twitch.tv/dasimba_',
+                category: 'streams',
+                color: '#9146FF'
+            },
+            {
+                id: 'youtube',
+                platform: 'youtube',
+                title: 'YouTube',
+                subtitle: '@enotik_das',
+                copyValue: '@enotik_das',
+                url: 'https://www.youtube.com/@enotik_das',
+                category: 'streams',
+                color: '#FF0000'
+            },
+            {
+                id: 'steam',
+                platform: 'steam',
+                title: 'Steam',
+                subtitle: 'profiles/76561199442575242',
+                copyValue: 'https://steamcommunity.com/profiles/76561199442575242/',
+                url: 'https://steamcommunity.com/profiles/76561199442575242/',
+                category: 'games',
+                color: '#38bdf8'
+            },
+            {
+                id: 'roblox',
+                platform: 'roblox',
+                title: 'Roblox',
+                subtitle: 'dasimbacypr',
+                copyValue: 'dasimbacypr',
+                url: 'https://www.roblox.com/search/users?keyword=dasimbacypr',
+                category: 'games',
+                color: '#e11d48'
+            },
+            {
+                id: 'telegram',
+                platform: 'telegram',
+                title: 'Telegram',
+                subtitle: '@raccoonhik',
+                copyValue: '@raccoonhik',
+                url: 'https://t.me/raccoonhik',
+                category: 'social',
+                color: '#2AABEE'
+            },
+            {
+                id: 'discord',
+                platform: 'discord',
+                title: 'Discord',
+                subtitle: 'Добавить в друзья: dasimba',
+                copyValue: 'dasimba',
+                url: 'https://discord.com/users/dasimba',
+                category: 'social',
+                color: '#5865F2',
+                isDiscord: true
+            },
+            {
+                id: 'vk',
+                platform: 'vk',
+                title: 'VK',
+                subtitle: 'vk.com/dasimba',
+                copyValue: 'https://vk.com/dasimba',
+                url: 'https://vk.com/dasimba',
+                category: 'social',
+                color: '#0077FF'
+            },
+            {
+                id: 'spotify',
+                platform: 'spotify',
+                title: 'Spotify',
+                subtitle: 'Dasimba',
+                copyValue: 'Dasimba',
+                url: 'https://open.spotify.com/',
+                category: 'music',
+                color: '#1DB954'
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentView = 'grid'; // 'grid' | 'list'
+        let toastTimeout = null;
+
+        function renderLinksCards() {
+            const container = document.getElementById('links-container');
+            container.innerHTML = '';
+
+            // Update container layout classes
+            if (currentView === 'grid') {
+                container.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3.5 transition-all duration-300';
+            } else {
+                container.className = 'flex flex-col gap-3 transition-all duration-300';
+            }
+
+            const filteredLinks = LINKS_DATA.filter(link => {
+                if (currentFilter === 'all') return true;
+                return link.category === currentFilter;
+            });
+
+            filteredLinks.forEach(link => {
+                const iconHtml = PLATFORM_ICONS[link.platform];
+                const brandColor = link.color;
+                const safeCopyVal = link.copyValue.replace(/'/g, "\\'");
+
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl p-4 flex items-center justify-between gap-3 group';
+
+                // Discord special handling
+                if (link.isDiscord) {
+                    card.innerHTML = `
+                        <!-- Left: Brand Icon + Info (Auto-copies on click and opens Discord) -->
+                        <div onclick="handleDiscordAction('${encodeURI(link.url)}')" class="flex items-center gap-3.5 min-w-0 flex-1 cursor-pointer">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-lg"
+                                 style="background: ${brandColor}22; border: 1px solid ${brandColor}55; color: ${brandColor}; box-shadow: 0 8px 20px -6px ${brandColor}66;">
+                                ${iconHtml}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5">
+                                    <h3 class="font-bold text-sm sm:text-base text-white truncate group-hover:text-purple-200 transition">${link.title}</h3>
+                                    <span class="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">user</span>
+                                </div>
+                                <p class="text-xs text-slate-400 truncate mt-0.5 font-mono">${link.subtitle}</p>
+                            </div>
+                        </div>
+
+                        <!-- Right: Copy ID Button & Open Discord Button -->
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button onclick="copyText('dasimba', 'Никнейм dasimba скопирован для Discord!')"
+                                    title="Скопировать никнейм dasimba"
+                                    class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                            <button onclick="handleDiscordAction('${encodeURI(link.url)}')"
+                               class="px-3.5 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-400/30 text-xs font-semibold text-white flex items-center gap-1.5 transition active:scale-95">
+                                <span>Добавить</span>
+                                <i class="fa-solid fa-user-plus text-[10px] opacity-80"></i>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <!-- Left: Brand Icon + Info -->
+                        <a href="${encodeURI(link.url)}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3.5 min-w-0 flex-1">
+                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 shadow-lg"
+                                 style="background: ${brandColor}22; border: 1px solid ${brandColor}55; color: ${brandColor}; box-shadow: 0 8px 20px -6px ${brandColor}66;">
+                                ${iconHtml}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h3 class="font-bold text-sm sm:text-base text-white truncate group-hover:text-purple-200 transition">${link.title}</h3>
+                                <p class="text-xs text-slate-400 truncate mt-0.5 font-mono">${link.subtitle}</p>
+                            </div>
+                        </a>
+
+                        <!-- Right: Copy Button & Go Button -->
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button onclick="copyText('${safeCopyVal}', 'Скопировано: ${safeCopyVal}')"
+                                    title="Скопировать"
+                                    class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                            <a href="${encodeURI(link.url)}" target="_blank" rel="noopener noreferrer"
+                               class="px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/20 border border-white/10 text-xs font-semibold text-white flex items-center gap-1.5 transition group-hover:border-white/30">
+                                <span>Перейти</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-75 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                            </a>
+                        </div>
+                    `;
+                }
+
+                container.appendChild(card);
+            });
+        }
+
+        /* Specific handler for Discord action: copies user tag and launches profile */
+        function handleDiscordAction(url) {
+            copyText('dasimba', 'Ник dasimba скопирован! Добавьте в друзья в Discord');
+            setTimeout(() => {
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }, 300);
+        }
+
+        /* View mode switch (Grid / List) */
+        function setViewMode(mode) {
+            currentView = mode;
+            const gridBtn = document.getElementById('view-grid-btn');
+            const listBtn = document.getElementById('view-list-btn');
+
+            if (mode === 'grid') {
+                gridBtn.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-xs transition bg-white/20 text-white shadow-sm';
+                listBtn.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-xs transition text-slate-400 hover:text-white';
+            } else {
+                listBtn.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-xs transition bg-white/20 text-white shadow-sm';
+                gridBtn.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-xs transition text-slate-400 hover:text-white';
+            }
+
+            renderLinksCards();
+        }
+
+        /* Filter Tabs */
+        function setFilter(category) {
+            currentFilter = category;
+            ['all', 'streams', 'games', 'social', 'music'].forEach(cat => {
+                const btn = document.getElementById('filter-' + cat);
+                if (!btn) return;
+                if (cat === category) {
+                    btn.className = 'filter-btn px-4 py-2 rounded-xl text-xs font-semibold transition bg-white/15 text-white border border-white/20 shrink-0';
+                } else {
+                    btn.className = 'filter-btn px-4 py-2 rounded-xl text-xs font-medium transition bg-white/5 text-slate-400 hover:text-white border border-transparent shrink-0';
+                }
+            });
+            renderLinksCards();
+        }
+
+        /* Safe Clipboard Copy */
+        function copyText(text, customMessage) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(customMessage || 'Скопировано!');
+            } catch (err) {
+                showToast('Скопировано: ' + text);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        /* Toast Popup */
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.textContent = message;
+            container.classList.remove('opacity-0', 'translate-y-4');
+            container.classList.add('opacity-100', 'translate-y-0');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                container.classList.remove('opacity-100', 'translate-y-0');
+                container.classList.add('opacity-0', 'translate-y-4');
+            }, 2600);
+        }
+
+        /* Animated Particle Grid Background */
+        function initBackgroundCanvas() {
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                createParticles();
+            }
+
+            function createParticles() {
+                const count = Math.min(55, Math.floor((width * height) / 24000));
+                particles = [];
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.45,
+                        vy: (Math.random() - 0.5) * 0.45,
+                        r: Math.random() * 1.8 + 0.7
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+                ctx.lineWidth = 1;
+                const gridSize = 64;
+                for (let x = 0; x < width; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < height; y += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+                    ctx.fill();
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 130) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(168, 85, 247, ${(1 - dist / 130) * 0.14})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+            draw();
+        }
+
+        window.onload = function () {
+            document.getElementById('profile-avatar').src = DASIMBA_AVATAR_SVG;
+            renderLinksCards();
+            initBackgroundCanvas();
+        };
+    </script>
+</body>
+</html>
